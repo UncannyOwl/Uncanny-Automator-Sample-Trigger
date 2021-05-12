@@ -16,7 +16,7 @@ class Uncanny_Automator_Trigger_Only {
 	 * Uncanny_Automator_Trigger_Only constructor.
 	 */
 	public function __construct() {
-		add_filter( 'automator_integrations', array( $this, 'load_triggers' ) );
+		add_filter( 'automator_integrations_setup', array( $this, 'load_triggers' ) );
 	}
 
 	/**
@@ -25,8 +25,12 @@ class Uncanny_Automator_Trigger_Only {
 	 * @return array|mixed
 	 */
 	public function load_triggers( $integrations ) {
-		$add_to_integration = 'uncanny-automator';
-		$trigger            = __DIR__ . '/uoa-recipenotcompleted.php';
+		// Let's find integration by name so that trigger can be added it's list.
+		$add_to_integration = automator_get_integration_by_name( 'Uncanny Automator' );
+		if ( empty( $add_to_integration ) ) {
+			return $integrations;
+		}
+		$trigger = __DIR__ . '/uoa-recipenotcompleted.php';
 
 		return automator_add_trigger( $integrations, $trigger, $add_to_integration );
 	}
