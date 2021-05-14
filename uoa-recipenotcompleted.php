@@ -84,12 +84,12 @@ class UOA_RECIPENOTCOMPLETED {
 	 * @param $object
 	 */
 	public function save_token_values( $args, $object ) {
-		$recipe_id = absint( $args['trigger_args']['recipe_id'] );
+		$recipe_id = $this->get_post_id();
 		$recipe    = get_post( $recipe_id );
 		if ( ! $recipe instanceof \WP_Post ) {
 			return;
 		}
-		$user_id       = absint( $args['trigger_args']['user_id'] );
+		$user_id       = $this->get_user_id();
 		$trigger_entry = $args['trigger_entry'];
 		Automator()->db->trigger->add_token_meta( 'UOARECIPES_recipe_id', $recipe_id, $trigger_entry );
 		Automator()->db->trigger->add_token_meta( 'UOARECIPES_recipe_title', $recipe->post_title, $trigger_entry );

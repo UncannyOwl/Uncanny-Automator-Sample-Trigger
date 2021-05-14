@@ -16,23 +16,20 @@ class Uncanny_Automator_Trigger_Only {
 	 * Uncanny_Automator_Trigger_Only constructor.
 	 */
 	public function __construct() {
-		add_filter( 'automator_integrations_setup', array( $this, 'load_triggers' ) );
+		add_action( 'automator_configuration_complete', array( $this, 'load_triggers' ) );
 	}
 
 	/**
-	 * @param $integrations
-	 *
-	 * @return array|mixed
+	 * @return bool|null
 	 */
-	public function load_triggers( $integrations ) {
+	public function load_triggers() {
 		// Let's find integration by name so that trigger can be added it's list.
 		$add_to_integration = automator_get_integration_by_name( 'Uncanny Automator' );
 		if ( empty( $add_to_integration ) ) {
-			return $integrations;
+			return null;
 		}
 		$trigger = __DIR__ . '/uoa-recipenotcompleted.php';
-
-		return automator_add_trigger( $integrations, $trigger, $add_to_integration );
+		automator_add_trigger( $trigger, $add_to_integration );
 	}
 }
 
