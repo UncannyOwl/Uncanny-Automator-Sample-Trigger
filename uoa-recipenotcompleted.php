@@ -45,6 +45,7 @@ class UOA_RECIPENOTCOMPLETED {
 	 * @return array
 	 */
 	protected function do_action_args( $args ) {
+
 		return array(
 			'recipe_id'     => $args[0],
 			'user_id'       => $args[1],
@@ -54,15 +55,14 @@ class UOA_RECIPENOTCOMPLETED {
 	}
 
 	/**
-	 * @param ...$args
+	 * @param $args
 	 */
-	protected function validate_trigger( ...$args ) {
+	protected function validate_trigger( $args ) {
 		$recipe_log_id = absint( $args['recipe_log_id'] );
 		global $wpdb;
 		// get recipe actions
 		$table_name = $wpdb->prefix . Automator()->db->tables->action;
 		$errors     = $wpdb->get_results( $wpdb->prepare( "SELECT automator_action_id FROM $table_name WHERE automator_recipe_log_id = {$recipe_log_id} AND error_message != ''" ) ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-
 		if ( empty( $errors ) ) {
 			// bail early
 			return false;
@@ -74,27 +74,8 @@ class UOA_RECIPENOTCOMPLETED {
 	/**
 	 * @param mixed ...$args
 	 */
-	protected function prepare_to_run( ...$args ) {
+	protected function prepare_to_run( $args ) {
 		$recipe_id = absint( $args['recipe_id'] );
 		$this->set_post_id( $recipe_id );
-	}
-
-	/**
-	 * @param $args
-	 * @param $object
-	 */
-	public function save_token_values( $args, $object ) {
-		$recipe_id = $this->get_post_id();
-		$recipe    = get_post( $recipe_id );
-		if ( ! $recipe instanceof \WP_Post ) {
-			return;
-		}
-		$user_id       = $this->get_user_id();
-		$trigger_entry = $args['trigger_entry'];
-		Automator()->db->trigger->add_token_meta( 'UOARECIPES_recipe_id', $recipe_id, $trigger_entry );
-		Automator()->db->trigger->add_token_meta( 'UOARECIPES_recipe_title', $recipe->post_title, $trigger_entry );
-		Automator()->db->trigger->add_token_meta( 'UOARECIPES_recipe_edit_link', get_edit_post_link( $recipe->ID ), $trigger_entry );
-		Automator()->db->trigger->add_token_meta( 'UOARECIPES_recipe_log_url', "recipe_id=$recipe_id&user_id=$user_id", $trigger_entry );
-		Automator()->db->trigger->add_token_meta( 'UOARECIPES_action_log_url', "recipe_id=$recipe_id&user_id=$user_id", $trigger_entry );
 	}
 }
