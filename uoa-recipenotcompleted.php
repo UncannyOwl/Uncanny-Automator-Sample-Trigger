@@ -13,7 +13,6 @@ class UOA_RECIPENOTCOMPLETED {
 	 */
 	public function __construct() {
 		$this->setup_trigger();
-		add_action( 'automator_before_trigger_completed', array( $this, 'save_token_values' ), 10, 2 );
 	}
 
 	/**

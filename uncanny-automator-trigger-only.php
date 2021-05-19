@@ -30,6 +30,8 @@ class Uncanny_Automator_Trigger_Only {
 		}
 		$trigger = __DIR__ . '/uoa-recipenotcompleted.php';
 		automator_add_trigger( $trigger, $add_to_integration );
+		$trigger = __DIR__ . '/uoa-uservisitspage.php';
+		automator_add_trigger( $trigger, $add_to_integration );
 	}
 }
 
